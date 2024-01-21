@@ -1,0 +1,116 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "User API's",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "User Registration",
+                "description": "Register by ...",
+                "operationId": "registerUser",
+                "requestBody": {
+                    "description": "Pass user credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "username",
+                                    "email",
+                                    "password",
+                                    "phone",
+                                    "code_phrase"
+                                ],
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "Username"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "email@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "PassWord12345"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "992999999999"
+                                    },
+                                    "code_phrase": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "ih"
+                                    },
+                                    "devices": {
+                                        "description": "Devices of user form Devices table",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer",
+                                            "format": "id"
+                                        },
+                                        "collectionFormat": "multi",
+                                        "example": "[1,2]"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "format": "text",
+                                        "example": "2"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "409": {
+                        "description": "User already exist",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "Duplicate (phone or email) user on register."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "Correct Registration",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiM2Q5MTkxYmE3OWNmYzM3MzcyMWIzNmFlOWJlMTRkMTljYjc2YWRhZGQ0NDA3MzIxNzczMzRkYmY1OTc3MWUwODc0OWNmZWJkNjBjNThjZjQiLCJpYXQiOjE3MDU2ODc2OTcuOTAwMDg3LCJuYmYiOjE3MDU2ODc2OTcuOTAwMDksImV4cCI6MTczNzMxMDA5Ny44ODY2NjEsInN1YiI6IjQiLCJzY29wZXMiOltdfQ.Qrf05e_exPvESGJIeSuOpF56kH7drJsd9L3ZymFkyi68ZOoCFvqesRU505p10JUwNQ14dyrlOPpjq85sk6AdEVHT0vaO2WRspaHVrF3ZPSyNH3VpuVRfs12lGNlFaOMTzR1O1qb2PLL306KrltPfwDa1G42GH6Sl_ji2Aiu-2-Rsc0ap6dgFSI5GmiwO92ErE_nMgMjfNwvmw3CgPPWhs934WcZaBHjAYU5csbYoNxq8SsQ5IxCcWyhoj4Tm2D-hbhEtOccYAmG71Cen_z8DOf2Zso20eDKWBZdNynWvpKXyHJYh1wyB2aBQKcHqDMa-dvoQg5_i1-Z7AELG-C1GkqiTo7qPwT5npJz8kpmIhlM9vkh3HelWHajkcbWDw1HZV--wFZJEdAuBlA7j9YffFsVmF1rmyxbA6fNGKCpqaLYEqDXNo_nMkI9NcP_Rwcd5TFSACXw17xqPVzZndmyar06r2ytYHSXPmUorq7xzYVYg1087KS2y6ZQQ2KUkcQlL4qKzHJS2gU-xQUe3gQEzN2cb6-PBbM-w99o2qaH-z4oR8NTY481NXGfEQFLPAxwGkONak1JYVewlqztltenqT2wfzcYwVaokQ7CIbgKHRuhyyWkkFqf9q1Lnkc3CwtoMmSb7RXs5bq2Ia3obGx6cKOgOpvGlM6zo0eC7FDsFa5s"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Name"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
