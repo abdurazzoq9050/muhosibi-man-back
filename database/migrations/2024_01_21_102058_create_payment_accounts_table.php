@@ -11,20 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('documents_types', function (Blueprint $table) {
+        Schema::create('payment_accounts', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->string('description');
-            $table->json('metatag');
+            $table->integer('number', 20);
+            $table->string('BIC');
+            $table->string('сorrespondent account');
+            $table->string('comments');
+            $table->string('status');
             $table->timestamps();
         });
     }
 
     /**
      * Reverse the migrations.
-    */
+     */
     public function down(): void
     {
-        Schema::dropIfExists('documents_types');
+        Schema::dropIfExists('payment_accounts');
     }
 };
