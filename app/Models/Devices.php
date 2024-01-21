@@ -31,4 +31,8 @@ class Devices extends Model
     protected $casts = [
     ];
 
+    public function users(){
+        return $this->belongsToMany(User::class);
+    }
+
 }
