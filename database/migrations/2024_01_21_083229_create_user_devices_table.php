@@ -11,14 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('user_devices', function (Blueprint $table) {
             $table->id();
-            $table->string('username', 50);
-            $table->string('email', 50);
-            $table->string('phone', 13);
-            $table->string('password');
-            $table->json('code_phrase');
-            $table->enum('status', ['disable','active','banned']);
+            $table->foreignId('user')->constrained();
+            $table->foreignId('device')->constrained();
             $table->timestamps();
         });
     }
@@ -28,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('user_devices');
     }
 };

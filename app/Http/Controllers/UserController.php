@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Devices;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -85,6 +86,7 @@ class UserController extends Controller
             'password' => 'required',
             'code_phrase' => 'required',
             'devices' => 'nullable',
+            'device' => 'nullable',
             'status'=>'nullable'
         ]);
 
@@ -101,7 +103,19 @@ class UserController extends Controller
 
             $input['password'] = bcrypt($input['password']);
             $user = User::create($input);
-            $user->devices()->sync($request->devices);
+
+            
+
+            if($input['device']){
+                $device = json_decode($input['device']);
+                $add_device['name'] = $device->name;
+                if($device->ip)
+                    $add_device['ip'] = $device->ip;
+                $added_device = Devices::create($add_device);
+            
+                $user->devices()->sync($added_device->id);
+            }
+
             $success['token'] =  $user->createToken('MuhosibiMan')->accessToken;
             $success['username'] =  $user->username;
 
