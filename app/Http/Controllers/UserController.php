@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Devices;
 use Illuminate\Http\Request;
 use Validator;
+use Hash;
 
 /**
  * @OA\Info(
@@ -94,8 +95,6 @@ class UserController extends Controller
             return response()->json(['validation' => $validator->errors()]);       
         }
 
-        
-
         $input = $request->all();
         
         $chekout = User::where('email',$input['email'])->orWhere('phone', $input['phone'])->first();
@@ -116,8 +115,8 @@ class UserController extends Controller
                 $user->devices()->sync($added_device->id);
             }
 
-            $success['token'] =  $user->createToken('MuhosibiMan')->accessToken;
             $success['username'] =  $user->username;
+            $success['token'] =  $user->createToken('MuhosibiMan')->accessToken;
 
             return response()->json($success,200);
 
@@ -133,7 +132,46 @@ class UserController extends Controller
 
     }
 
-
+    /**
+     * @OA\Post(
+     * path="/api/auth",
+     * summary="User Authorization",
+     * description="Auth by ...",
+     * operationId="authUser",
+     * tags={"user"},
+     * @OA\RequestBody(
+     *    required=true,
+     *    description="Pass user credentials",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="phone", type="string", example="992999999999"),
+     *       @OA\Property(property="password", type="string", format="password", example="PassWord12345"),
+     *    ),
+     * ),
+     * @OA\Response(
+     *    response=404,
+     *    description="User not found",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="status", type="string", example="User not found on auth."),
+     *    )
+     * ),
+     * @OA\Response(
+     *    response=401,
+     *    description="Password is incorrect",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="status", type="string", example="Password is incorrect."),
+     *    )
+     * ),
+     * @OA\Response(
+     *    response=200,
+     *    description="Signed in",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="id", type="string", example="1"),
+     *       @OA\Property(property="token", type="string", example="eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiM2Q5MTkxYmE3OWNmYzM3MzcyMWIzNmFlOWJlMTRkMTljYjc2YWRhZGQ0NDA3MzIxNzczMzRkYmY1OTc3MWUwODc0OWNmZWJkNjBjNThjZjQiLCJpYXQiOjE3MDU2ODc2OTcuOTAwMDg3LCJuYmYiOjE3MDU2ODc2OTcuOTAwMDksImV4cCI6MTczNzMxMDA5Ny44ODY2NjEsInN1YiI6IjQiLCJzY29wZXMiOltdfQ.Qrf05e_exPvESGJIeSuOpF56kH7drJsd9L3ZymFkyi68ZOoCFvqesRU505p10JUwNQ14dyrlOPpjq85sk6AdEVHT0vaO2WRspaHVrF3ZPSyNH3VpuVRfs12lGNlFaOMTzR1O1qb2PLL306KrltPfwDa1G42GH6Sl_ji2Aiu-2-Rsc0ap6dgFSI5GmiwO92ErE_nMgMjfNwvmw3CgPPWhs934WcZaBHjAYU5csbYoNxq8SsQ5IxCcWyhoj4Tm2D-hbhEtOccYAmG71Cen_z8DOf2Zso20eDKWBZdNynWvpKXyHJYh1wyB2aBQKcHqDMa-dvoQg5_i1-Z7AELG-C1GkqiTo7qPwT5npJz8kpmIhlM9vkh3HelWHajkcbWDw1HZV--wFZJEdAuBlA7j9YffFsVmF1rmyxbA6fNGKCpqaLYEqDXNo_nMkI9NcP_Rwcd5TFSACXw17xqPVzZndmyar06r2ytYHSXPmUorq7xzYVYg1087KS2y6ZQQ2KUkcQlL4qKzHJS2gU-xQUe3gQEzN2cb6-PBbM-w99o2qaH-z4oR8NTY481NXGfEQFLPAxwGkONak1JYVewlqztltenqT2wfzcYwVaokQ7CIbgKHRuhyyWkkFqf9q1Lnkc3CwtoMmSb7RXs5bq2Ia3obGx6cKOgOpvGlM6zo0eC7FDsFa5s"),
+     *      )
+     *     )
+     * ),
+     * )
+     */
     public function auth(Request $request){
 
         $validator = Validator::make($request->all(), [
@@ -156,13 +194,24 @@ class UserController extends Controller
         $chekout = User::where('phone',$input['phone'])->first();
         if(!is_null($chekout)){
 
-            $input['password'] = bcrypt($input['password']);
-            $user = User::create($input);
-            $user->devices()->sync($request->devices);
-            $success['token'] =  $user->createToken('MuhosibiMan')->accessToken;
-            $success['username'] =  $user->username;
 
-            return response()->json($success,200);
+            if(Hash::check($input['password'], $chekout->password)){
+                $user = $chekout;
+
+                 //$user->devices()->sync($request->devices);
+                $success['id'] =  $user->id;
+                $success['token'] =  $user->createToken('MuhosibiMan')->accessToken;
+
+                return response()->json($success,200);
+
+            }else{
+                return response()->json(
+                    [ 
+                        'status' => 'Password is incorrect.'
+                    ],
+                    401
+                );
+            }
 
         }else{
             return response()->json(
@@ -178,10 +227,65 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-
+    /**
+     * @OA\GET(
+     *     path="/api/user/{id}",
+     *     summary="Get User",
+     *     description="Get User by Id",
+     *     operationId="getUser",
+     *     tags={"user"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="query",
+     *         description="User identifier",
+     *         required=true,
+     *         example="12"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="User not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="User not found on auth.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="User founded",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example="12"),
+     *             @OA\Property(property="username", type="string", example="Abdurazzoq"),
+     *             @OA\Property(property="email", type="string", example="abdurazzoq9050@gmail.com"),
+     *             @OA\Property(property="phone", type="string", example="992928369050"),
+     *             @OA\Property(
+     *                 property="code_phrase",
+     *                 description="Code Phrases",
+     *                 type="array",
+     *                 @OA\Items(type="string", format="id"),
+     *                 example="['ih', 'liebe', 'dich']"
+     *             ),
+     *             @OA\Property(property="status", type="string", example="active"),
+     *             @OA\Property(property="created_at", type="string", example="2024-01-21T09:09:38.000000Z"),
+     *             @OA\Property(property="updated_at", type="string", example="2024-01-21T09:09:38.000000Z"),
+     *             @OA\Property(
+     *                 property="devices",
+     *                 description="List of devices",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(property="id", type="integer", example="1"),
+     *                     @OA\Property(property="name", type="string", example="Poco M3"),
+     *                     @OA\Property(property="ip", type="string", example="192.168.1.100"),
+     *                     @OA\Property(property="location", type="string", example=null),
+     *                     @OA\Property(property="created_at", type="string", example="2024-01-21T08:39:46.000000Z"),
+     *                     @OA\Property(property="updated_at", type="string", example="2024-01-21T08:39:46.000000Z"),
+     *                 )
+     *             ),
+     *         )
+     *     )
+     * )
+     */
     public function show(User $user)
     {
-        $user = User::find($user);
+        $user = User::find($user)->first();
 
         if(is_null($user)){
             return response()->json(
@@ -190,6 +294,9 @@ class UserController extends Controller
                 ],
                 404
             );
+        }else{
+            $user['code_phrase'] = json_decode($user['code_phrase']);
+            $user['devices'] = $user->devices;
         }
 
         return response()->json($user, 200);
@@ -206,9 +313,34 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
-        //
+        // Validate the request data
+        $validator = Validator::make($request->all(), [
+            'username' => 'sometimes|string', // Add any other validation rules for other fields
+            'email' => 'sometimes|email',
+            'phone' => 'sometimes|string',
+            // Add more fields as needed
+        ]);
+
+        // If validation fails, return the error response
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+
+        // Find the user by ID
+        $user = User::find($id);
+
+        // If user not found, return 404 response
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        // Update user data using only the provided fields
+        $user->update($request->only(['username', 'email', 'phone']));
+
+        // Return a success response
+        return response()->json(['message' => 'User updated successfully']);
     }
 
     /**

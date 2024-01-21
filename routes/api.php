@@ -22,11 +22,14 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('register', [UserController::class, 'store']);
-Route::resource('devices', DevicesController::class);
+Route::post('auth', [UserController::class, 'auth']);
+
 
 Route::middleware('auth:api')->group( function () {
-    // any routes
+
     Route::resource('user', UserController::class);
+    Route::resource('devices', DevicesController::class);
+
 
     
 });
