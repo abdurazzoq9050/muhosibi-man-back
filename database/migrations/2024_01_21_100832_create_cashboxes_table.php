@@ -11,20 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('documents_types', function (Blueprint $table) {
+        Schema::create('cashboxes', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('description');
-            $table->json('metatag');
+            $table->decimal('balance');
+            $table->enum('status', ['unreaded','readed','archived']);
             $table->timestamps();
         });
     }
 
     /**
      * Reverse the migrations.
-    */
+     */
     public function down(): void
     {
-        Schema::dropIfExists('documents_types');
+        Schema::dropIfExists('cashboxes');
     }
 };
