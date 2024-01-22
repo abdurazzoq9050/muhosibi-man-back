@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('сorrespondent account');
             $table->string('comments');
             $table->string('status');
-            $table->timestamps();
+            $table->timestamps(); 
         });
     }
 

@@ -7,5 +7,31 @@ use Illuminate\Database\Eloquent\Model;
 
 class Counterparty extends Model
 {
-    use HasFactory;
+    use HasFactory; 
+
+    protected $fillable = [
+        'full_name',
+        'short_name',
+        'legal_address',
+        'physic_address',
+        'site',
+        'inn',
+        'kpp',
+        'contacts',
+        'for_sign_docs',
+        'by_person',
+        'passport_details',
+        'comment',
+        'payment_method',
+    ];
+
+    protected $casts = [
+        'inn' => 'integer',
+        'kpp' => 'integer',
+        'contacts' => 'json',
+        'for_sign_docs' => 'json',
+        'by_person' => 'json',
+        'passport_details' => 'json',
+        'comment' => 'json',
+    ];
 }

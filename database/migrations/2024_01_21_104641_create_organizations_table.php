@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('email');
             $table->string('phone');
-            $table->string('inn', 15);
+            $table->string('inn', 15); 
             $table->string('kpp', 20);
             $table->enum('tax_system', ['УСН доходы','УСН доходы минус расходы']);
             $table->string('legal_address');

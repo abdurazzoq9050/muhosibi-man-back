@@ -7,5 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Cashbox extends Model
 {
-    use HasFactory;
+    use HasFactory; 
+
+    protected $fillable = [
+        'title',
+        'balance',
+        'status',
+    ];
 }
