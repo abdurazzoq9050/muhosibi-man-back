@@ -17,19 +17,18 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('father_name');
             $table->date('birthday');
-            $table->enum('gender', ['мужской','женский']);
+            $table->enum('gender', ['Мужской','Женский']);
             $table->string('citizenship');
             $table->string('contract_type');
             $table->string('position');
             $table->date('begin_date');
             $table->date('experience_days');
-            $table->integer('unique_number')->autoIncrement();
+            $table->integer('unique_number');
             $table->json('passport_details');
             $table->string('legal_address');
             $table->string('physic_address');
-            $table->integer('inn', 15);
-            $table->integer('physic_address');
-            $table->enum('payment_method', ['налисными','На карту зарплатного проекта','На личную карту']);
+            $table->integer('inn')->length(15);
+            $table->enum('payment_method', ['Наличными','На карту зарплатного проекта','На личную карту']);
             $table->timestamps();
         });
     }

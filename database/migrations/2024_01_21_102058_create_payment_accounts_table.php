@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('payment_accounts', function (Blueprint $table) {
             $table->id();
-            $table->integer('number', 20);
+            $table->integer('number')->length(20);
             $table->string('BIC');
             $table->string('сorrespondent account');
             $table->string('comments');

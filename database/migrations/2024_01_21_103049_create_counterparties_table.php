@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('legal_address');
             $table->string('physic_address');
             $table->string('site');
-            $table->integer('inn', 15);
-            $table->integer('kpp', 20);
+            $table->integer('inn')->length(15);
+            $table->integer('kpp')->length(20);
             $table->json('contacts');
             $table->json('for_sign_docs');
             $table->json('by_person');
