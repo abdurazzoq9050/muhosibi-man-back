@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Activities;
 use App\Models\Organization;
 use Illuminate\Http\Request;
+use Validator;
 
 class OrganizationController extends Controller
 {
@@ -28,7 +30,53 @@ class OrganizationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'title' => 'required',
+            'email' => 'required|email',
+            'phone' => 'required',
+            'inn' => 'required',
+            'kpp' => 'required',
+            'tax_system' => 'required',
+            'legal_address' => 'required',
+            'physic_address' => 'required',
+            'type' => 'required',
+            'contacts' => 'required',
+            'status' => 'required',
+        ]);
+
+        if($validator->fails()){
+            return response()->json(['validation' => $validator->errors()]);       
+        }
+
+        $input = $request->all();
+        
+        $chekout = Organization::where('email',$input['email'])->orWhere('phone', $input['phone'])->first();
+        if(is_null($chekout)){
+
+            $organization = Organization::create($input);
+
+            if( is_string($input['activities']) && strpos($input['activities'], ',') !== false){
+                $arr = explode(',',$input['activities']);
+                foreach($arr as $item){
+                    // $organization->activities()->sync($item);
+                    $organization->activities()->attach($item);
+                }
+            }else{
+                $organization->activities()->sync($input['activities']);
+            }
+
+            return response()->json($organization,200);
+
+        }else{
+            return response()->json(
+                [ 
+                    'status' => 'Duplicate (phone or email) organization on register.'
+                ],
+                409
+            );
+        }
+
+
     }
 
     /**

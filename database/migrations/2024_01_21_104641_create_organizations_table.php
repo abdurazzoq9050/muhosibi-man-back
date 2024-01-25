@@ -21,6 +21,8 @@ return new class extends Migration
             $table->enum('tax_system', ['УСН доходы','УСН доходы минус расходы']);
             $table->string('legal_address');
             $table->string('physic_address');
+            $table->unsignedBigInteger('owner_id');
+            $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('type');
             $table->json('contacts');
             $table->enum('status', ['active','banned','disable']);

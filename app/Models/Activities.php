@@ -13,4 +13,9 @@ class Activities extends Model
         'title',
         'description',
     ];
+
+    public function organizations(){
+        return $this->belongsToMany(Organization::class);
+    }
+
 }

@@ -50,4 +50,9 @@ class User extends Authenticatable
         return $this->belongsToMany(Devices::class,'user_devices', 'user','device');
     }
 
+    public function organizations()
+    {
+        return $this->hasMany(Organization::class, 'owner_id');
+    }
+
 }

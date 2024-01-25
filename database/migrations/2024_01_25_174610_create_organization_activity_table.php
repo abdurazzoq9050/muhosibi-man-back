@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cashboxes', function (Blueprint $table) {
+        Schema::create('organization_activity', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->decimal('balance');
-            $table->unsignedBigInteger('organization');
-            $table->foreign('organization')->references('id')->on('organizations')->onDelete('cascade');
-            $table->enum('status', ['unreaded','readed','archived']);
+            $table->foreignId('organization')->constrained()->onDelete('cascade');
+            $table->foreignId('activity')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cashboxes');
+        Schema::dropIfExists('organization_activity');
     }
 };
