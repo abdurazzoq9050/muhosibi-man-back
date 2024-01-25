@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('position');
             $table->date('begin_date');
             $table->date('experience_days');
-            $table->integer('unique_number');
+            $table->integer("unique_number")->unique();
             $table->json('passport_details');
             $table->string('legal_address');
             $table->string('physic_address');
