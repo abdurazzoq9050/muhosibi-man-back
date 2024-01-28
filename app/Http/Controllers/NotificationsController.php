@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Notifications;
+use Exception;
 use Illuminate\Http\Request;
+use Validator;
 
 class NotificationsController extends Controller
 {
@@ -28,7 +30,32 @@ class NotificationsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'subject'=>'required',
+            'description'=>'nullable',
+            'user'=>'required',
+            'status'=>'required',
+        ]);
+
+        if($validator->fails()){
+            return response()->json(['validation' => $validator->errors()]);       
+        }
+
+        $input = $request->all();
+        
+        try{
+
+            $organization = Notifications::create($input);
+            return response()->json($organization,200);
+
+        }catch(Exception $exception){
+            return response()->json(
+                [ 
+                    'error' => $exception->getMessage(),
+                ],
+                400
+            );
+        }
     }
 
     /**

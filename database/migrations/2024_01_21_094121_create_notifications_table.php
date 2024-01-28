@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('subject');
             $table->text('description');
+            $table->unsignedBigInteger('user');
+            $table->foreign('user')->references('id')->on('users')->onDelete('cascade');
             $table->enum('status', ['unreaded','readed','archived']);
             $table->timestamps();
         });

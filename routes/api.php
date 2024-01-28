@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\CashboxController;
 use App\Http\Controllers\DevicesController;
+use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -26,11 +28,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('register', [UserController::class, 'store']);
 Route::post('auth', [UserController::class, 'auth']);
-Route::resource('organization', OrganizationController::class);
 
 
 Route::middleware('auth:api')->group( function () {
-
+    
     Route::resource('user', UserController::class);
     Route::resource('devices', DevicesController::class);
+    Route::resource('organization', OrganizationController::class);
+    Route::resource('cashbox', CashboxController::class);
+    Route::resource('notification', NotificationsController::class);
 });
