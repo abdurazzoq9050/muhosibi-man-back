@@ -12,13 +12,13 @@ class Cashbox extends Model
     protected $fillable = [
         'title',
         'balance',
-        'organization',
+        'organization_id',
         'status',
     ];
 
     public function organization()
     {
-        return $this->belongsTo(Organization::class,'organization');
+        return $this->belongsTo(Organization::class);
     }
 
 }

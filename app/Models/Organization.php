@@ -37,10 +37,11 @@ class Organization extends Model
         return $this->belongsTo(User::class, 'owner_id');
     }
 
-    public function cashbox()
+    public function cashboxes()
     {
-        return $this->hasMany(Cashbox::class, 'organization');
+        return $this->hasMany(Cashbox::class);
     }
+    
 
 
 }

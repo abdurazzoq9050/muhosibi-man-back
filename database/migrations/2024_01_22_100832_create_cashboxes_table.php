@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->decimal('balance');
-            $table->unsignedBigInteger('organization');
-            $table->foreign('organization')->references('id')->on('organizations')->onDelete('cascade');
+            $table->unsignedBigInteger('organization_id');
+            $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
             $table->enum('status', ['unreaded','readed','archived']);
             $table->timestamps();
         });
