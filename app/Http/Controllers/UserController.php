@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Devices;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Validator;
 use Hash;
@@ -21,7 +22,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $users = User::paginate(50);
+
+        return response()->json($users,200);
+
     }
 
     /**
@@ -105,7 +109,7 @@ class UserController extends Controller
 
             
 
-            if($input['device']){
+            if(isset($input['device'])){
                 $device = json_decode($input['device']);
                 $add_device['name'] = $device->name;
                 if($device->ip)
@@ -113,6 +117,8 @@ class UserController extends Controller
                 $added_device = Devices::create($add_device);
             
                 $user->devices()->sync($added_device->id);
+            }else{
+                $user->devices()->sync($input['devices']);
             }
 
             $success['username'] =  $user->username;
@@ -315,39 +321,71 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Validate the request data
-        $validator = Validator::make($request->all(), [
-            'username' => 'sometimes|string', // Add any other validation rules for other fields
-            'email' => 'sometimes|email',
-            'phone' => 'sometimes|string',
-            // Add more fields as needed
-        ]);
-
-        // If validation fails, return the error response
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
-        }
-
-        // Find the user by ID
+        // $validator = Validator::make($request->all(), [
+        //     'username' => 'required',
+        //     'email' => 'required|email',
+        //     'phone' => 'required',
+        //     'password' => 'nullable',
+        //     'code_phrase' => 'required',
+        //     'devices' => 'nullable',
+        //     'device' => 'nullable',
+        //     'status' => 'nullable'
+        // ]);
+    
+        // if ($validator->fails()) {
+        //     return response()->json(['validation' => $validator->errors()]);
+        // }
+    
         $user = User::find($id);
-
-        // If user not found, return 404 response
-        if (!$user) {
+    
+        if (is_null($user)) {
             return response()->json(['error' => 'User not found'], 404);
         }
-
-        // Update user data using only the provided fields
-        $user->update($request->only(['username', 'email', 'phone']));
-
-        // Return a success response
-        return response()->json(['message' => 'User updated successfully']);
+    
+        $input = $request->all();
+    
+        if (isset($input['password'])) {
+            $input['password'] = bcrypt($input['password']);
+        }
+    
+        $user->update($input);
+    
+        if(isset($input['device'])){
+            $device = json_decode($input['device']);
+            $add_device['name'] = $device->name;
+            if($device->ip)
+                $add_device['ip'] = $device->ip;
+            $added_device = Devices::create($add_device);
+        
+            $user->devices()->sync($added_device->id);
+        }else{
+            $user->devices()->sync($input['devices']);
+        }
+    
+        $success['username'] = $user->username;
+        $success['token'] = $user->createToken('MuhosibiMan')->accessToken;
+    
+        return response()->json($success, 200);
     }
+    
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(int $id)
     {
-        //
+        try {
+            $user = User::find($id);
+            
+            $user->delete();
+    
+            return response()->json(['message' => 'User deleted successfully'], 200);
+    
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'User not found'], 404);
+    
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to delete user'], 500);
+        }
     }
 }

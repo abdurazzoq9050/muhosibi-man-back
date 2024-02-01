@@ -34,4 +34,10 @@ class Counterparty extends Model
         'passport_details' => 'json',
         'comment' => 'json',
     ];
+
+    public function paymentAccount()
+    {
+        return $this->hasMany(PaymentAccount::class, 'owner_id');
+    }
+
 }

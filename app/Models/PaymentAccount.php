@@ -15,9 +15,15 @@ class PaymentAccount extends Model
         'сorrespondent_account', 
         'comments',
         'status',
+        'owner_id',
     ];
 
     protected $casts = [
         'number' => 'integer',
     ];
+
+    public function owner()
+    {
+        return $this->belongsTo(Counterparty::class, 'owner_id');
+    }
 }

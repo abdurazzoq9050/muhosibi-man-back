@@ -13,7 +13,10 @@ class DevicesController extends Controller
      */
     public function index()
     {
-        //
+        $devices = Devices::with('users')->paginate(50);
+
+        return response()->json($devices);
+
     }
 
     /**

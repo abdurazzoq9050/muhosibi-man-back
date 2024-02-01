@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PaymentAccount;
 use Illuminate\Http\Request;
+use Validator;
 
 class PaymentAccountController extends Controller
 {
@@ -28,7 +29,39 @@ class PaymentAccountController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+
+        $validator = Validator::make($request->all(), [
+            'number'=>'required',
+            'BIC'=>'required',
+            'сorrespondent_account'=>'required', 
+            'comments'=>'required',
+            'status'=>'required',
+            'owner_id'=>'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+
+        $input = $request->all();
+
+        $checkout = PaymentAccount::where('owner_id',$input['owner_id'])->first();
+
+        if(is_null($checkout)){
+            $payment = PaymentAccount::create($input);
+            
+            return response()->json(['data'=>$payment], 201);
+
+        }else{
+            return response()->json(
+                [ 
+                    'status' => 'This owner already has a payment account.'
+                ],
+                403
+            );
+        }
+        
     }
 
     /**

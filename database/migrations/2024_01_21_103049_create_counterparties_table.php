@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('legal_address');
             $table->string('physic_address');
             $table->string('site');
+            $table->enum('group',['a','b','c']);
             $table->integer('inn')->length(15);
             $table->integer('kpp')->length(20);
             $table->json('contacts');
@@ -25,7 +26,7 @@ return new class extends Migration
             $table->json('by_person');
             $table->json('passport_details');
             $table->json('comment');
-            $table->enum('payment_method', ['налисными','На карту зарплатного проекта',' На личную карту']);
+            $table->enum('payment_method', ['Наличными','На карту зарплатного проекта',' На личную карту']);
             $table->timestamps();
         });
     }

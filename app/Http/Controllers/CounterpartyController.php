@@ -28,7 +28,21 @@ class CounterpartyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $input = $request->all();
+
+        // $checkout = Counterparty::where('',$input['owner'])->first();
+
+        // if(is_null($checkout)){
+            $counterparty = Counterparty::create($input);
+            return response()->json($counterparty);
+        // }else{
+        //     return response()->json(
+        //         [ 
+        //             'status' => 'This owner already has a payment account.'
+        //         ],
+        //         403
+        //     );
+        // }
     }
 
     /**

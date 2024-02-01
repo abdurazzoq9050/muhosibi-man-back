@@ -1,11 +1,12 @@
 <?php
 
 use App\Http\Controllers\CashboxController;
+use App\Http\Controllers\CounterpartyController;
 use App\Http\Controllers\DevicesController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\PaymentAccountController;
 use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,4 +38,7 @@ Route::middleware('auth:api')->group( function () {
     Route::resource('organization', OrganizationController::class);
     Route::resource('cashbox', CashboxController::class);
     Route::resource('notification', NotificationsController::class);
+    Route::resource('payment-account', PaymentAccountController::class);
+    Route::resource('counterparty', CounterpartyController::class);
+    
 });
