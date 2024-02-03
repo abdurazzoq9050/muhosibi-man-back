@@ -61,9 +61,18 @@ class NotificationsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Notifications $notifications)
+    public function show($id)
     {
-        //
+        // Find the notification by ID
+        $notification = Notifications::find($id);
+
+        // Check if the notification exists
+        if (!$notification) {
+            return response()->json(['message' => 'Notification not found'], 404);
+        }
+
+        // Return a JSON response with the retrieved notification
+        return response()->json(['data' => $notification], 200);
     }
 
     /**
@@ -77,16 +86,52 @@ class NotificationsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Notifications $notifications)
+   public function update(Request $request, $id)
     {
-        //
+        // Validate incoming request data
+        $validator = Validator::make($request->all(), [
+            'subject' => 'string|max:255',
+            'description' => 'nullable|string',
+            // 'user'=>'required',
+            'status' => 'nullable|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['validation' => $validator->errors()]);
+        }
+
+        // Find the notification by ID
+        $notification = Notifications::find($id);
+
+        // Check if the notification exists
+        if (!$notification) {
+            return response()->json(['message' => 'Notification not found'], 404);
+        }
+
+        // Update the notification with the validated data
+        $notification->update($request->all());
+
+        // Optionally, you can return a response with the updated notification
+        return response()->json(['message' => 'Notification updated successfully', 'data' => $notification], 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Notifications $notifications)
+    public function destroy($id)
     {
-        //
+        // Find the notification by ID
+        $notification = Notifications::find($id);
+
+        // Check if the notification exists
+        if (!$notification) {
+            return response()->json(['message' => 'Notification not found'], 404);
+        }
+
+        // Delete the notification
+        $notification->delete();
+
+        // Optionally, you can return a response with a success message
+        return response()->json(['message' => 'Notification deleted successfully'], 200);
     }
 }

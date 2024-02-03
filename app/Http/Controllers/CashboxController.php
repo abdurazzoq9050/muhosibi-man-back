@@ -14,7 +14,9 @@ class CashboxController extends Controller
      */
     public function index()
     {
-        //
+        $records = Cashbox::all();
+
+        return response()->json(['data' => $records], 200);
     }
 
     /**

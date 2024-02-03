@@ -1,11 +1,16 @@
 <?php
 
+use App\Http\Controllers\ActivitiesController;
 use App\Http\Controllers\CashboxController;
 use App\Http\Controllers\CounterpartyController;
 use App\Http\Controllers\DevicesController;
+use App\Http\Controllers\DocumentsController;
+use App\Http\Controllers\DocumentsTypeController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\PaymentAccountController;
+use App\Http\Controllers\StuffController;
+use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -37,8 +42,14 @@ Route::middleware('auth:api')->group( function () {
     Route::resource('devices', DevicesController::class);
     Route::resource('organization', OrganizationController::class);
     Route::resource('cashbox', CashboxController::class);
-    Route::resource('notification', NotificationsController::class);
+    Route::resource('notifications', NotificationsController::class);
     Route::resource('payment-account', PaymentAccountController::class);
     Route::resource('counterparty', CounterpartyController::class);
+    Route::resource('doctypes', DocumentsTypeController::class);
+    Route::resource('documents', DocumentsController::class);
+    Route::resource('transactions', TransactionsController::class);
+    Route::resource('activity', ActivitiesController::class);
+    Route::resource('stuff', StuffController::class);
+
     
 });

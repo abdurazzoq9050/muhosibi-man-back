@@ -12,7 +12,11 @@ class CounterpartyController extends Controller
      */
     public function index()
     {
-        //
+        // Retrieve all records from the database
+        $records = Counterparty::all();
+
+        // Optionally, you can return a response with the retrieved records
+        return response()->json(['data' => $records], 200);
     }
 
     /**
@@ -28,21 +32,27 @@ class CounterpartyController extends Controller
      */
     public function store(Request $request)
     {
-        $input = $request->all();
+         // Validate incoming request data
+         $validatedData = $request->validate([
+            'full_name' => 'required|string|max:255',
+            'short_name' => 'required|string|max:50',
+            'legal_address' => 'required|string|max:255',
+            'physic_address' => 'required|string|max:255',
+            'site' => 'nullable|string|max:255',
+            'inn' => 'required|integer',
+            'kpp' => 'required|integer',
+            'contacts' => 'nullable|json',
+            'for_sign_docs' => 'nullable|json',
+            'by_person' => 'nullable|json',
+            'passport_details' => 'nullable|json',
+            'comment' => 'nullable|json',
+            'payment_method' => 'nullable|string|max:50',
+        ]);
 
-        // $checkout = Counterparty::where('',$input['owner'])->first();
+        $newRecord = Counterparty::create($validatedData);
 
-        // if(is_null($checkout)){
-            $counterparty = Counterparty::create($input);
-            return response()->json($counterparty);
-        // }else{
-        //     return response()->json(
-        //         [ 
-        //             'status' => 'This owner already has a payment account.'
-        //         ],
-        //         403
-        //     );
-        // }
+        // Optionally, you can return a response with the created record
+        return response()->json(['message' => 'Record created successfully', 'data' => $newRecord], 201);
     }
 
     /**
@@ -64,16 +74,48 @@ class CounterpartyController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Counterparty $counterparty)
+    public function update(Request $request, $id)
     {
-        //
+        $record = Counterparty::find($id);
+
+        if (!$record) {
+            return response()->json(['message' => 'Record not found'], 404);
+        }
+
+        $validatedData = $request->validate([
+            'full_name' => 'string|max:255',
+            'short_name' => 'string|max:50',
+            'legal_address' => 'string|max:255',
+            'physic_address' => 'string|max:255',
+            'site' => 'nullable|string|max:255',
+            'inn' => 'integer',
+            'kpp' => 'integer',
+            'contacts' => 'nullable|json',
+            'for_sign_docs' => 'nullable|json',
+            'by_person' => 'nullable|json',
+            'passport_details' => 'nullable|json',
+            'comment' => 'nullable|json',
+            'payment_method' => 'nullable|string|max:50',
+        ]);
+
+        $record->update($validatedData);
+
+        return response()->json(['message' => 'Record updated successfully', 'data' => $record], 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Counterparty $counterparty)
+    public function destroy($id)
     {
-        //
+        $record = Counterparty::find($id);
+
+        if (!$record) {
+            return response()->json(['message' => 'Record not found'], 404);
+        }
+
+        $record->delete();
+
+        return response()->json(['message' => 'Record deleted successfully'], 200);
     }
 }

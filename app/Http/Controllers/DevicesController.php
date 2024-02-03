@@ -48,9 +48,18 @@ class DevicesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Devices $devices)
+    public function show(int $id)
     {
-        //
+           // Find the device by ID
+           $device = Devices::find($id);
+
+           // Check if the device exists
+           if (!$device) {
+               return response()->json(['message' => 'Device not found'], 404);
+           }
+   
+           // Return a JSON response with the retrieved device
+           return response()->json(['data' => $device], 200);
     }
 
     /**
@@ -64,8 +73,17 @@ class DevicesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Devices $devices)
+    public function destroy($id)
     {
-        //
+        $device = Devices::find($id);
+
+        if (!$device) {
+            return response()->json(['message' => 'Device not found'], 404);
+        }
+
+        // Delete the device
+        $device->delete();
+
+        return response()->json(['message' => 'Device deleted successfully'], 200);
     }
 }
