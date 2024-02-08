@@ -362,10 +362,7 @@ class UserController extends Controller
             $user->devices()->sync($input['devices']);
         }
     
-        $success['username'] = $user->username;
-        $success['token'] = $user->createToken('MuhosibiMan')->accessToken;
-    
-        return response()->json($success, 200);
+        return response()->json(['message'=>'User successfully updated'], 200);
     }
     
 

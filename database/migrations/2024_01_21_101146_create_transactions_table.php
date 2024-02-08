@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->enum('type', ['переход','постуаление']);
-            $table->json('detalis');
+            // $table->enum('base', ['Переход','Поступление']);
+            $table->enum('type', ['Переход','Поступление']);
+            $table->json('details');
             $table->decimal('total');
             $table->decimal('total_tax');
             $table->enum('status', ['В обработке','Принят','Ошибка','Удержан']);

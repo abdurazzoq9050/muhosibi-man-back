@@ -14,10 +14,10 @@ class DocumentsController extends Controller
     public function index()
     {
         // Retrieve all documents from the 'documents' table
-        $documents = Documents::all();
+        $documents = Documents::paginate(50);
 
         // Optionally, you can return a JSON response with the retrieved documents
-        return response()->json(['data' => $documents], 200);
+        return response()->json($documents, 200);
     }
 
     /**
@@ -38,6 +38,7 @@ class DocumentsController extends Controller
             'title' => 'required|string|max:255',
             'template' => 'required|string',
             'metatag' => 'nullable|json',
+            'doc_type' => 'required',
             'with_sign_seal' => 'boolean',
             'public' => 'boolean',
             'sum' => 'numeric',
@@ -58,9 +59,23 @@ class DocumentsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Documents $documents)
+    public function show(int $documentId)
     {
-        //
+        $documents = Documents::find($documentId);
+
+        if(!$documents){
+            return response()->json(
+                [
+                    'message'=>"Document not found"
+                ], 404
+            );
+        }
+
+        return response()->json(
+            [
+                'data'=>$documents
+            ]
+            );
     }
 
     /**
@@ -76,7 +91,6 @@ class DocumentsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Validate incoming request data
         $validator = Validator::make($request->all(), [
             'title' => 'string|max:255',
             'template' => 'string',
@@ -84,7 +98,6 @@ class DocumentsController extends Controller
             'with_sign_seal' => 'boolean',
             'public' => 'boolean',
             'sum' => 'numeric',
-            // Add other validation rules as needed
         ]);
 
         if ($validator->fails()) {
@@ -103,7 +116,7 @@ class DocumentsController extends Controller
         $document->update($request->all());
 
         // Optionally, you can return a response with the updated document
-        return response()->json(['message' => 'Document updated successfully', 'data' => $document], 200);
+        return response()->json(['message' => 'Document updated successfully'], 200);
     }
 
     /**

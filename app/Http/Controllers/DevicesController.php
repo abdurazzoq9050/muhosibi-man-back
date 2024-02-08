@@ -50,24 +50,57 @@ class DevicesController extends Controller
      */
     public function show(int $id)
     {
-           // Find the device by ID
            $device = Devices::find($id);
 
-           // Check if the device exists
            if (!$device) {
                return response()->json(['message' => 'Device not found'], 404);
            }
    
-           // Return a JSON response with the retrieved device
            return response()->json(['data' => $device], 200);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Devices $devices)
+    public function update(Request $request, int $deviceId)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'nullable',
+            'ip' => 'nullable',
+            'location' => 'nullable',
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json(['validation' => $validator->errors()]);
+        }
+        
+        $input = $request->all();
+        
+        $device = Devices::find($deviceId);
+        
+        if (!$device) {
+            return response()->json(['error' => 'Device not found'], 404);
+        }
+        
+        $data = [];
+        if (isset($input['name'])) {
+            $data['name'] = $input['name'];
+        }
+        
+        if (isset($input['ip'])) {
+            $data['ip'] = $input['ip'];
+        }
+        
+        if (isset($input['location'])) {
+            $data['location'] = $input['location'];
+        }
+        
+        $device->update($data);
+        
+        return response()->json([
+            'message' => 'Device updated successfully',
+        ]);
+        
     }
 
     /**
@@ -81,7 +114,6 @@ class DevicesController extends Controller
             return response()->json(['message' => 'Device not found'], 404);
         }
 
-        // Delete the device
         $device->delete();
 
         return response()->json(['message' => 'Device deleted successfully'], 200);

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('cashboxes', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->decimal('balance');
+            $table->decimal('balance',50,2);
             $table->unsignedBigInteger('organization');
             $table->foreign('organization')->references('id')->on('organizations')->onDelete('cascade');
             $table->enum('status', ['active','disable','archived']);

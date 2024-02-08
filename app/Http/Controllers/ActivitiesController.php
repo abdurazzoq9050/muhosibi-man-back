@@ -39,15 +39,29 @@ class ActivitiesController extends Controller
     
         $newRecord = Activities::create($validatedData);
     
-        return response()->json(['message' => 'Record created successfully', 'data' => $newRecord], 201);
+        return response()->json(['data' => $newRecord], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Activities $activities)
+    public function show(int $activityId)
     {
-        //
+        $activities = Activities::find($activityId);
+        if(!$activities){
+            return response()->json(
+                [
+                    'message'=>'Activity Not Found'
+                ],404
+            );
+        }
+
+
+        return response()->json(
+            [
+                'data'=>$activities
+            ]
+            );
     }
 
     /**
@@ -63,7 +77,7 @@ class ActivitiesController extends Controller
      */
     public function update(Request $request, $id)
     {
-                $activities = Activities::find($id);
+        $activities = Activities::find($id);
     
         if (!$activities) {
             return response()->json(['message' => 'Record not found'], 404);
@@ -76,7 +90,7 @@ class ActivitiesController extends Controller
     
         $activities->update($validatedData);
     
-        return response()->json(['message' => 'Record updated successfully', 'data' => $activities], 200);
+        return response()->json(['message' => 'Record updated successfully'], 200);
     }
 
     /**

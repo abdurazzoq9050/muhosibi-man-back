@@ -18,4 +18,11 @@ class DocumentsType extends Model
     protected $casts = [
         'metatag' => 'json',
     ];
+
+    public function documents()
+    {
+        return $this->hasMany(Documents::class, 'doc_type');
+    }
+    
+
 }   

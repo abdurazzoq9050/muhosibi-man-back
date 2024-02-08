@@ -12,6 +12,7 @@ class Documents extends Model
         'title',
         'template',
         'metatag',
+        'doc_type',
         'with_sign_seal',
         'public',
         'sum',
@@ -22,4 +23,11 @@ class Documents extends Model
         'with_sign_seal' => 'boolean',
         'public' => 'boolean',
     ];
+
+    public function documentType()
+    {
+        return $this->belongsTo(DocumentsType::class, 'doc_type');
+    }
+    
+
 }

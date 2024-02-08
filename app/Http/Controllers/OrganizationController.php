@@ -74,7 +74,7 @@ class OrganizationController extends Controller
         }else{
             return response()->json(
                 [ 
-                    'status' => 'Duplicate (phone or email) organization on register.'
+                    'message' => 'Duplicate (phone or email) organization on register.'
                 ],
                 409
             );
@@ -86,9 +86,24 @@ class OrganizationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Organization $organization)
+    public function show(int $organizationId)
     {
-        //
+        $organization = Organization::find($organizationId);
+        
+        if(is_null($organization)){
+            return response()->json(
+                [
+                    'message' => 'Organization not found'
+                ], 404
+            );
+        }else{
+            return response()->json(
+                [
+                    'data'=>$organization
+                ], 200
+            );
+        }
+
     }
 
     /**
@@ -104,7 +119,6 @@ class OrganizationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Validate incoming request data
         $validator = Validator::make($request->all(), [
             'title' => 'string|max:255',
             'email' => 'nullable|email|max:255',
@@ -117,28 +131,22 @@ class OrganizationController extends Controller
             'type' => 'nullable|string|max:255',
             'contacts' => 'nullable|json',
             'status' => 'nullable|string|max:255',
-            // Add other validation rules as needed
         ]);
 
         if ($validator->fails()) {
             return response()->json(['validation' => $validator->errors()]);
         }
 
-        // Find the organization by ID
         $organization = Organization::find($id);
 
-        // Check if the organization exists
         if (!$organization) {
             return response()->json(['message' => 'Organization not found'], 404);
         }
 
-        // Your custom condition (replace this with your specific condition)
         if ($organization->status === 'active') {
-            // Update the organization with the validated data
             $organization->update($request->all());
 
-            // Optionally, you can return a response with the updated organization
-            return response()->json(['message' => 'Organization updated successfully', 'data' => $organization], 200);
+            return response()->json(['message' => 'Organization updated successfully'], 200);
         } else {
             return response()->json(['message' => 'Organization cannot be updated due to a specific condition'], 400);
         }
@@ -150,18 +158,14 @@ class OrganizationController extends Controller
      */
     public function destroy($id)
     {
-        // Find the organization by ID
         $organization = Organization::find($id);
 
-        // Check if the organization exists
         if (!$organization) {
             return response()->json(['message' => 'Organization not found'], 404);
         }
 
-        // Delete the organization
         $organization->delete();
 
-        // Optionally, you can return a response with a success message
         return response()->json(['message' => 'Organization deleted successfully'], 200);
     }
 }

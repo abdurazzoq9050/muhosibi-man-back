@@ -14,7 +14,9 @@ class NotificationsController extends Controller
      */
     public function index()
     {
-        //
+        $notifications = Notifications::paginate(50);
+
+        return response()->json($notifications,200);
     }
 
     /**
@@ -72,6 +74,18 @@ class NotificationsController extends Controller
         }
 
         // Return a JSON response with the retrieved notification
+        return response()->json(['data' => $notification], 200);
+    }
+
+
+    public function show_by_user($user)
+    {
+        $notification = Notifications::where('user',$user)->get();
+
+        if (!$notification) {
+            return response()->json(['message' => 'Notifications not found'], 404);
+        }
+
         return response()->json(['data' => $notification], 200);
     }
 

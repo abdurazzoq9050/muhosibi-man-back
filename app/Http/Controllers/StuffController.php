@@ -12,7 +12,9 @@ class StuffController extends Controller
      */
     public function index()
     {
-        //
+        $stuff = Stuff::paginate(50);
+
+        return response()->json($stuff,200);
     }
 
     /**
@@ -28,15 +30,53 @@ class StuffController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
+            'father_name' => 'required|string',
+            'birthday' => 'required|date',
+            'gender' => 'required',
+            'citizenship' => 'required|string',
+            'contract_type' => 'required|string',
+            'position' => 'required|string',
+            'begin_date' => 'required|date',
+            'experience_days' => 'required|integer',
+            'unique_number' => 'required|string',
+            'passport_details' => 'required|string',
+            'legal_address' => 'required|string',
+            'physic_address' => 'required|string',
+            'inn' => 'required|string',
+            'payment_method' => 'required|string',
+        ]);
+    
+        // Create a new employee instance with the validated data
+        $employee = Stuff::create($validatedData);
+    
+        // Return a response indicating success
+        return response()->json(['message' => 'Employee created successfully', 'data' => $employee], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Stuff $stuff)
+    public function show(int $stuffId)
     {
-        //
+        $stuff = Stuff::find($stuffId);
+
+        if(!$stuff){
+            return response()->json(
+                [
+                    'message'=>'Stuff not found'
+                ]
+            );
+        }
+
+        return response()->json(
+            [
+                'data'=>$stuff
+            ]
+        );
+
     }
 
     /**
@@ -50,16 +90,26 @@ class StuffController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Stuff $stuff)
+    public function update(Request $request, $id)
     {
-        //
+
+        $stuff = Stuff::findOrFail($id);
+
+        $stuff->update($request->all());
+
+        return response()->json(['message' => 'Stuff updated successfully'], 200);
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Stuff $stuff)
+    public function destroy($id)
     {
-        //
+        $stuff = Stuff::findOrFail($id);
+
+        $stuff->delete();
+
+        return response()->json(['message' => 'Stuff deleted successfully'], 200);
     }
 }

@@ -33,12 +33,10 @@ class DocumentsTypeController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate incoming request data
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'metatag' => 'nullable|json',
-            // Add other validation rules as needed
         ]);
 
         if ($validator->fails()) {
@@ -80,9 +78,33 @@ class DocumentsTypeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, DocumentsType $documentsType)
+    public function update(Request $request, $id)
     {
-        //
+        // Validate the incoming request data
+        $validator = Validator::make($request->all(), [
+            'title' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'metatag' => 'nullable|json',
+        ]);
+    
+        // Check if validation fails
+        if ($validator->fails()) {
+            return response()->json(['validation' => $validator->errors()], 400);
+        }
+    
+        // Find the DocumentsType model instance by ID
+        $documentsType = DocumentsType::find($id);
+    
+        // If the model instance is not found, return a 404 error response
+        if (!$documentsType) {
+            return response()->json(['message' => 'Document type not found'], 404);
+        }
+    
+        // Update the documents type with the new data
+        $documentsType->update($request->all());
+    
+        // Return a JSON response with the updated documents type
+        return response()->json(['message'=>'Document Types successfully updated'], 200);
     }
 
     /**

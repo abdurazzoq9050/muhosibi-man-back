@@ -64,9 +64,23 @@ class CashboxController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Cashbox $cashbox)
+    public function show(int $cashboxId)
     {
-        //
+        $cashbox = Cashbox::find($cashboxId);
+
+        if(!$cashbox){
+            return response()->json(
+                [
+                    'message'=>'Cashbox not found'
+                ],404
+            );
+        }else{
+            return response()->json(
+                [
+                    'data'=>$cashbox
+                ]
+            );
+        }
     }
 
     /**
@@ -82,14 +96,45 @@ class CashboxController extends Controller
      */
     public function update(Request $request, Cashbox $cashbox)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'title' => 'nullable',
+            'balance' => 'nullable',
+            'organization' => 'nullable',
+            'status' => 'nullable',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['validation' => $validator->errors()]);
+        }
+
+        $input = $request->all();
+
+        try {
+            $cashbox->update($input);
+
+            return response()->json($cashbox, 200);
+
+        } catch (Exception $exception) {
+            return response()->json(['error' => $exception->getMessage()], 400);
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Cashbox $cashbox)
+    public function destroy(int $cashboxId)
     {
-        //
+        $cashbox = Cashbox::find($cashboxId);
+
+        if (!$cashbox) {
+            return response()->json(['message' => 'Cashbox not found'], 404);
+        }
+
+        $cashbox->delete();
+
+        return response()->json(['data' => $cashbox], 200);
+
     }
+
 }

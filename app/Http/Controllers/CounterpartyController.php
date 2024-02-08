@@ -12,10 +12,8 @@ class CounterpartyController extends Controller
      */
     public function index()
     {
-        // Retrieve all records from the database
-        $records = Counterparty::all();
+        $records = Counterparty::paginate(50);
 
-        // Optionally, you can return a response with the retrieved records
         return response()->json(['data' => $records], 200);
     }
 
@@ -32,7 +30,6 @@ class CounterpartyController extends Controller
      */
     public function store(Request $request)
     {
-         // Validate incoming request data
          $validatedData = $request->validate([
             'full_name' => 'required|string|max:255',
             'short_name' => 'required|string|max:50',
@@ -51,16 +48,26 @@ class CounterpartyController extends Controller
 
         $newRecord = Counterparty::create($validatedData);
 
-        // Optionally, you can return a response with the created record
-        return response()->json(['message' => 'Record created successfully', 'data' => $newRecord], 201);
+        return response()->json(['data' => $newRecord], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Counterparty $counterparty)
+    public function show(int $counterpartyId)
     {
-        //
+        $counterparty = Counterparty::find($counterpartyId);
+
+        if(!$counterparty){
+            return response()->json(
+                [
+    
+                ], 404
+            );
+        }
+
+        return response()->json(['data'=>$counterparty],200);
+        
     }
 
     /**
@@ -79,7 +86,7 @@ class CounterpartyController extends Controller
         $record = Counterparty::find($id);
 
         if (!$record) {
-            return response()->json(['message' => 'Record not found'], 404);
+            return response()->json(['message' => 'Counterparty not found'], 404);
         }
 
         $validatedData = $request->validate([
@@ -100,7 +107,7 @@ class CounterpartyController extends Controller
 
         $record->update($validatedData);
 
-        return response()->json(['message' => 'Record updated successfully', 'data' => $record], 200);
+        return response()->json(['message' => 'Counterparty updated successfully'], 200);
     }
 
     /**
@@ -111,11 +118,11 @@ class CounterpartyController extends Controller
         $record = Counterparty::find($id);
 
         if (!$record) {
-            return response()->json(['message' => 'Record not found'], 404);
+            return response()->json(['message' => 'Counterparty not found'], 404);
         }
 
         $record->delete();
 
-        return response()->json(['message' => 'Record deleted successfully'], 200);
+        return response()->json(['message' => 'Counterparty deleted successfully'], 200);
     }
 }

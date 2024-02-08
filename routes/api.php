@@ -38,18 +38,19 @@ Route::post('auth', [UserController::class, 'auth']);
 
 Route::middleware('auth:api')->group( function () {
     
-    Route::resource('user', UserController::class);
     Route::resource('devices', DevicesController::class);
+    Route::resource('user', UserController::class);
     Route::resource('organization', OrganizationController::class);
     Route::resource('cashbox', CashboxController::class);
-    Route::resource('notifications', NotificationsController::class);
+    Route::resource('notification', NotificationsController::class);
+    Route::get('user-notifications/{user}', [NotificationsController::class, 'show_by_user']);
     Route::resource('payment-account', PaymentAccountController::class);
     Route::resource('counterparty', CounterpartyController::class);
     Route::resource('doctypes', DocumentsTypeController::class);
     Route::resource('documents', DocumentsController::class);
     Route::resource('transactions', TransactionsController::class);
-    Route::resource('activity', ActivitiesController::class);
     Route::resource('stuff', StuffController::class);
+    Route::resource('activity', ActivitiesController::class);
 
     
 });
