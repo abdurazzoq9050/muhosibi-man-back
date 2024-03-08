@@ -46,7 +46,7 @@ class PaymentController extends Controller
                 
             }
 
-            return response()->json($json, 200);
+            return response()->json(['status'=>'Successfully Saved !'], 200);
         } else {
             return response()->json(['error' => 'No file attached in the request'], 400);
         }
