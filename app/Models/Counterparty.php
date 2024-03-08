@@ -40,4 +40,13 @@ class Counterparty extends Model
         return $this->hasMany(PaymentAccount::class, 'owner_id');
     }
 
+    public function sender()
+    {
+        return $this->belongsTo(Counterparty::class, 'sender');
+    }
+    public function taker()
+    {
+        return $this->belongsTo(Counterparty::class, 'taker');
+    }
+
 }

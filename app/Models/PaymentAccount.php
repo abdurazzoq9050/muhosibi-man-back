@@ -26,4 +26,10 @@ class PaymentAccount extends Model
     {
         return $this->belongsTo(Counterparty::class, 'owner_id');
     }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transactions::class, 'payment');
+    }
+
 }

@@ -9,6 +9,7 @@ use App\Http\Controllers\DocumentsTypeController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\PaymentAccountController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StuffController;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\UserController;
@@ -51,6 +52,8 @@ Route::middleware('auth:api')->group( function () {
     Route::resource('transactions', TransactionsController::class);
     Route::resource('stuff', StuffController::class);
     Route::resource('activity', ActivitiesController::class);
+    Route::resource('payments', PaymentController::class);
+    Route::get('paymentsByOwner/{owner_id}', [PaymentController::class, 'getPaymentsByOwnerId']);
 
     
 });

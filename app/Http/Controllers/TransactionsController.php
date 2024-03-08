@@ -4,62 +4,79 @@ namespace App\Http\Controllers;
 
 use App\Models\Transactions;
 use Illuminate\Http\Request;
+use Validator;
 
 class TransactionsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $transactions = Transactions::all();
+
+        return response()->json($transactions);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function show($id)
     {
-        //
+        $transaction = Transactions::with(['sender', 'taker', 'paymentAccount'])->find($id);
+    
+        if(is_null($transaction)){
+            return response()->json(
+                [ 
+                    'status' => 'Transaction not found.'
+                ],
+                404
+            );
+        }
+    
+        return response()->json($transaction);
     }
+    
+    
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+
+        $validator = Validator::make($request->all(), [
+            'type' => 'required',
+            'details' => 'required',
+            'total' => 'required',
+            'total_tax' => 'required',
+            'sender' => 'required',
+            'taker' => 'required',
+            'payment' => 'required',
+            'status' => 'required',
+        ]);
+
+        if($validator->fails()){
+            return response()->json(['validation' => $validator->errors()]);       
+        }
+
+        $transaction = Transactions::create($request->all());
+
+        return response()->json($transaction, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Transactions $transactions)
+    public function update(Request $request, $id)
     {
-        //
+        $transaction = Transactions::find($id);
+
+        if (is_null($transaction)) {
+            return response()->json(['error' => 'Transactions not found'], 404);
+        }
+
+        $input = $request->all();
+        
+        $transaction->update($input);
+
+        return response()->json($transaction, 200);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Transactions $transactions)
+    public function destroy($id)
     {
-        //
-    }
+        $transaction = Transactions::findOrFail($id);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Transactions $transactions)
-    {
-        //
-    }
+        $transaction->delete();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Transactions $transactions)
-    {
-        //
+        return response()->json(['message' => 'Transaction deleted successfully'], 200);
     }
 }

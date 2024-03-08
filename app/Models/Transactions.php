@@ -10,13 +10,34 @@ class Transactions extends Model
     use HasFactory;
     protected $fillable = [
         'type',
-        'detalis',
+        'details',
         'total',
         'total_tax',
+        'sender',
+        'taker',
         'status',
+        'payment',
     ];
 
     protected $casts = [
         'detalis' => 'json',
     ];
+
+    public function taker()
+    {
+        return $this->belongsTo(Counterparty::class, 'taker');
+    }
+    
+    public function sender()
+    {
+        return $this->belongsTo(Counterparty::class, 'sender');
+    }
+
+    
+    public function paymentAccount()
+    {
+        return $this->belongsTo(PaymentAccount::class, 'payment');
+    }
+
+
 }
