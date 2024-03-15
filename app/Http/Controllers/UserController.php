@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Validator;
 use Hash;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 /**
  * @OA\Info(
@@ -103,7 +105,7 @@ class UserController extends Controller
         
         $chekout = User::where('email',$input['email'])->orWhere('phone', $input['phone'])->first();
         if(is_null($chekout)){
-
+            $input['username'] = Crypt::encryptString($input['username']);
             $input['password'] = bcrypt($input['password']);
             $user = User::create($input);
 
@@ -303,6 +305,11 @@ class UserController extends Controller
         }else{
             $user['code_phrase'] = json_decode($user['code_phrase']);
             $user['devices'] = $user->devices;
+        }
+        try {
+            $user['username'] = Crypt::decryptString($user['username']);
+        } catch (DecryptException $e) {
+            // asd
         }
 
         return response()->json($user, 200);
