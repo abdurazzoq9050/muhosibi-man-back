@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -63,5 +65,66 @@ class User extends Authenticatable
     {
         return $this->hasMany(Notifications::class, 'user');
     }
+
+
+    // username
+    public function getUsernameAttribute($value)
+    {
+        return Crypt::decryptString($value);
+    }
+
+    public function setUsernameAttribute($value)
+    {
+        $this->attributes['username'] = Crypt::encryptString($value);
+    }
+
+
+    // email
+    public function getEmailAttribute($value)
+    {
+        return Crypt::decryptString($value);
+    }
+    public function setEmailAttribute($value)
+    {
+        $this->attributes['email'] = Crypt::encryptString($value);
+    }
+
+    // phone
+    public function getPhoneAttribute($value)
+    {
+        return Crypt::decryptString($value);
+    }
+
+    public function setPhoneAttribute($value)
+    {
+        $this->attributes['phone'] = Crypt::encryptString($value);
+    }
+
+    // code phrases
+    public function getCodePhraseAttribute($value)
+    {
+        return Crypt::decryptString($value);
+    }
+
+    public function setCodePhraseAttribute($value)
+    {
+        $this->attributes['code_phrase'] = Crypt::encryptString($value);
+    }
+
+    
+    // status
+    // public function getStatusAttribute($value)
+    // {
+    //     return Crypt::decryptString($value);
+    // }
+
+    // public function setStatusAttribute($value)
+    // {
+    //     $this->attributes['status'] = Crypt::encryptString($value);
+    // }
+    
+
+
+
 
 }

@@ -105,11 +105,8 @@ class UserController extends Controller
         
         $chekout = User::where('email',$input['email'])->orWhere('phone', $input['phone'])->first();
         if(is_null($chekout)){
-            $input['username'] = Crypt::encryptString($input['username']);
             $input['password'] = bcrypt($input['password']);
             $user = User::create($input);
-
-            
 
             if(isset($input['device'])){
                 $device = json_decode($input['device']);
@@ -305,11 +302,6 @@ class UserController extends Controller
         }else{
             $user['code_phrase'] = json_decode($user['code_phrase']);
             $user['devices'] = $user->devices;
-        }
-        try {
-            $user['username'] = Crypt::decryptString($user['username']);
-        } catch (DecryptException $e) {
-            // asd
         }
 
         return response()->json($user, 200);
