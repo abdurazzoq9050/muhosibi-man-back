@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('devices', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('ip', 16);
+            $table->string('ip');
             $table->string('location')->nullable();
             $table->timestamps();
         });
@@ -28,4 +28,5 @@ return new class extends Migration
     {
         Schema::dropIfExists('devices');
     }
+
 };

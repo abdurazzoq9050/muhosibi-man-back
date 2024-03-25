@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -70,7 +69,11 @@ class User extends Authenticatable
     // username
     public function getUsernameAttribute($value)
     {
-        return Crypt::decryptString($value);
+        try {
+            return Crypt::decryptString($value);
+        } catch (DecryptException $e) {
+            return null;
+        }
     }
 
     public function setUsernameAttribute($value)
@@ -82,49 +85,30 @@ class User extends Authenticatable
     // email
     public function getEmailAttribute($value)
     {
-        return Crypt::decryptString($value);
+        try {
+            return Crypt::decryptString($value);
+        } catch (DecryptException $e) {
+            return null;
+        }
     }
+
     public function setEmailAttribute($value)
     {
         $this->attributes['email'] = Crypt::encryptString($value);
     }
 
-    // phone
-    public function getPhoneAttribute($value)
-    {
-        return Crypt::decryptString($value);
-    }
-
-    public function setPhoneAttribute($value)
-    {
-        $this->attributes['phone'] = Crypt::encryptString($value);
-    }
-
     // code phrases
     public function getCodePhraseAttribute($value)
     {
-        return Crypt::decryptString($value);
+        try {
+            return Crypt::decryptString($value);
+        } catch (DecryptException $e) {
+            return null;
+        }
     }
 
     public function setCodePhraseAttribute($value)
     {
         $this->attributes['code_phrase'] = Crypt::encryptString($value);
     }
-
-    
-    // status
-    // public function getStatusAttribute($value)
-    // {
-    //     return Crypt::decryptString($value);
-    // }
-
-    // public function setStatusAttribute($value)
-    // {
-    //     $this->attributes['status'] = Crypt::encryptString($value);
-    // }
-    
-
-
-
-
 }

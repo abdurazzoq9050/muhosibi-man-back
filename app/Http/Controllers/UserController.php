@@ -196,9 +196,13 @@ class UserController extends Controller
         
         // $chekout = User::where('email',$input['email'])->first();
         // $chekout = User::where('username',$input['username'])->first();
-        $chekout = User::where('phone',$input['phone'])->first();
+        $chekout = User::where('phone', $input['phone'])->first();
+        // $chekout = User::first();
+        // if($chekout->phone==$input['phone'])
+            // dd($chekout);
+        
+        
         if(!is_null($chekout)){
-
 
             if(Hash::check($input['password'], $chekout->password)){
                 $user = $chekout;

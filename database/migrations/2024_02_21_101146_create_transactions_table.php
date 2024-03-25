@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             // $table->enum('base', ['Переход','Поступление']);
             $table->enum('type', ['Переход','Поступление']);
-            $table->json('details');
-            $table->decimal('total',50,2);
-            $table->decimal('total_tax',50,2);
+            $table->string('details');
+            $table->string('total');
+            $table->string('total_tax');
 
             $table->unsignedBigInteger('sender');
             $table->foreign('sender')->references('id')->on('counterparties')->onDelete('cascade');

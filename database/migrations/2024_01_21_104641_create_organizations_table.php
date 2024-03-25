@@ -16,15 +16,15 @@ return new class extends Migration
             $table->string('title');
             $table->string('email');
             $table->string('phone');
-            $table->string('inn', 15); 
-            $table->string('kpp', 20);
+            $table->string('inn'); 
+            $table->string('kpp');
             $table->enum('tax_system', ['УСН доходы','УСН доходы минус расходы']);
             $table->string('legal_address');
             $table->string('physic_address');
             $table->unsignedBigInteger('owner_id');
             $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('type');
-            $table->json('contacts');
+            $table->string('contacts');
             $table->enum('status', ['active','banned','disable']);
 
             $table->timestamps();

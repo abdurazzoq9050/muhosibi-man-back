@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 class Counterparty extends Model
 {
@@ -15,6 +17,7 @@ class Counterparty extends Model
         'legal_address',
         'physic_address',
         'site',
+        'group',
         'inn',
         'kpp',
         'contacts',
@@ -35,18 +38,134 @@ class Counterparty extends Model
         'comment' => 'json',
     ];
 
-    public function paymentAccount()
+    // Decrypt attribute with try-catch block
+    private function decryptAttribute($value)
     {
-        return $this->hasMany(PaymentAccount::class, 'owner_id');
+        try {
+            return Crypt::decryptString($value);
+        } catch (DecryptException $e) {
+            return null;
+        }
     }
 
-    public function sender()
+    public function getFullNameAttribute($value)
     {
-        return $this->belongsTo(Counterparty::class, 'sender');
+        return $this->decryptAttribute($value);
     }
-    public function taker()
+
+    public function setFullNameAttribute($value)
     {
-        return $this->belongsTo(Counterparty::class, 'taker');
+        $this->attributes['full_name'] = Crypt::encryptString($value);
+    }
+
+    public function getShortNameAttribute($value)
+    {
+        return $this->decryptAttribute($value);
+    }
+
+    public function setShortNameAttribute($value)
+    {
+        $this->attributes['short_name'] = Crypt::encryptString($value);
+    }
+
+    public function getLegalAddressAttribute($value)
+    {
+        return $this->decryptAttribute($value);
+    }
+
+    public function setLegalAddressAttribute($value)
+    {
+        $this->attributes['legal_address'] = Crypt::encryptString($value);
+    }
+
+    public function getPhysicAddressAttribute($value)
+    {
+        return $this->decryptAttribute($value);
+    }
+
+    public function setPhysicAddressAttribute($value)
+    {
+        $this->attributes['physic_address'] = Crypt::encryptString($value);
+    }
+
+    public function getSiteAttribute($value)
+    {
+        return $this->decryptAttribute($value);
+    }
+
+    public function setSiteAttribute($value)
+    {
+        $this->attributes['site'] = Crypt::encryptString($value);
+    }
+
+    public function getInnAttribute($value)
+    {
+        return $this->decryptAttribute($value);
+    }
+
+    public function setInnAttribute($value)
+    {
+        $this->attributes['inn'] = Crypt::encryptString($value);
+    }
+
+    public function getKppAttribute($value)
+    {
+        return $this->decryptAttribute($value);
+    }
+
+    public function setKppAttribute($value)
+    {
+        $this->attributes['kpp'] = Crypt::encryptString($value);
+    }
+
+    public function getContactsAttribute($value)
+    {
+        return $this->decryptAttribute($value);
+    }
+
+    public function setContactsAttribute($value)
+    {
+        $this->attributes['contacts'] = Crypt::encryptString($value);
+    }
+
+    public function getForSignDocsAttribute($value)
+    {
+        return $this->decryptAttribute($value);
+    }
+
+    public function setForSignDocsAttribute($value)
+    {
+        $this->attributes['for_sign_docs'] = Crypt::encryptString($value);
+    }
+
+    public function getByPersonAttribute($value)
+    {
+        return $this->decryptAttribute($value);
+    }
+
+    public function setByPersonAttribute($value)
+    {
+        $this->attributes['by_person'] = Crypt::encryptString($value);
+    }
+
+    public function getPassportDetailsAttribute($value)
+    {
+        return $this->decryptAttribute($value);
+    }
+
+    public function setPassportDetailsAttribute($value)
+    {
+        $this->attributes['passport_details'] = Crypt::encryptString($value);
+    }
+
+    public function getCommentAttribute($value)
+    {
+        return $this->decryptAttribute($value);
+    }
+
+    public function setCommentAttribute($value)
+    {
+        $this->attributes['comment'] = Crypt::encryptString($value);
     }
 
 }

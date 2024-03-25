@@ -17,10 +17,10 @@ return new class extends Migration
             $table->text('template');
             $table->unsignedBigInteger('doc_type');
             $table->foreign('doc_type')->references('id')->on('documents_types')->onDelete('cascade');
-            $table->json('metatag');
-            $table->boolean('with_sign_seal');
-            $table->boolean('public');
-            $table->decimal('sum');
+            $table->string('metatag');
+            $table->string('with_sign_seal');
+            $table->string('public');
+            $table->string('sum');
             $table->timestamps();
         });
     }

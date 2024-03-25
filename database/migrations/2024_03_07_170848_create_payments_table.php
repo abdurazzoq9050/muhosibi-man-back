@@ -26,11 +26,11 @@ return new class extends Migration
             $table->string('beneficiary_street')->nullable()->default(null);
             $table->string('beneficiary_bank_code')->nullable()->default(null);
             $table->string('currency_operation_code')->nullable()->default(null);
-            $table->json('currency_agreement')->nullable()->default(null);
+            $table->string('currency_agreement')->nullable()->default(null);
             $table->string('budget_organization_code')->nullable()->default(null);
             $table->string('income_code')->nullable()->default(null);
             $table->string('region_code')->nullable()->default(null);
-            $table->json('have_bank_intermediary')->nullable()->default(null);
+            $table->string('have_bank_intermediary')->nullable()->default(null);
             $table->string('payment_sum');
             $table->string('payment_purpose');
             $table->string('comment')->nullable()->default(null);
