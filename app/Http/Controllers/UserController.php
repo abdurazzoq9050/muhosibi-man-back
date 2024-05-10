@@ -388,4 +388,27 @@ class UserController extends Controller
             return response()->json(['error' => 'Failed to delete user'], 500);
         }
     }
+
+    
+
+    public function showMe(Request $request)
+    {
+        $userId = $request->user()->id;
+        $user = User::find($userId)->first();
+
+        if(is_null($user)){
+            return response()->json(
+                [ 
+                    'status' => 'User not found on auth.'
+                ],
+                404
+            );
+        }else{
+            $user['code_phrase'] = json_decode($user['code_phrase']);
+            $user['devices'] = $user->devices;
+        }
+
+        return response()->json($user, 200);
+    }
+
 }

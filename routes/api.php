@@ -41,6 +41,7 @@ Route::middleware('auth:api')->group( function () {
     
     Route::resource('devices', DevicesController::class);
     Route::resource('user', UserController::class);
+    Route::get('me', [UserController::class, 'showMe']);
     Route::resource('organization', OrganizationController::class);
     Route::resource('cashbox', CashboxController::class);
     Route::resource('notification', NotificationsController::class);
