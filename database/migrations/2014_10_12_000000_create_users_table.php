@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('surname');
             $table->string('patronimic');
-            $table->enum('status', ['male','female',null]);
+            $table->enum('gender', ['male','female',null]);
             $table->string('age');
             $table->date('birth');
             $table->string('email');
