@@ -26,7 +26,6 @@ return new class extends Migration
             $table->string('type');
             $table->string('contacts');
             $table->enum('status', ['active','banned','disable']);
-
             $table->timestamps();
         });
     }
